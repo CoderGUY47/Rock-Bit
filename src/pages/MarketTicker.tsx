@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { FiSearch, FiStar, FiChevronRight } from "react-icons/fi";
@@ -212,10 +212,42 @@ function formatVolume(vol: number) {
   });
 }
 
+const SYMBOL_TO_ID: Record<string, string> = {
+  'BTC': 'bitcoin',
+  'ETH': 'ethereum',
+  'USDT': 'tether',
+  'BNB': 'bnb',
+  'SOL': 'solana',
+  'XRP': 'xrp',
+  'ADA': 'cardano',
+  'AVAX': 'avalanche'
+};
+
 export const MarketTicker = () => {
   const [activeTab, setActiveTab] = useState("Crypto");
   const [activeTableTab, setActiveTableTab] = useState("View All");
   const [searchQuery, setSearchQuery] = useState("");
+  const [livePrices, setLivePrices] = useState<Record<string, { price: number; change24h: number; volume24h: string }>>({});
+
+  useEffect(() => {
+    const fetchLivePrices = async () => {
+      try {
+        const res = await fetch('/api/crypto/prices');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.prices) {
+            setLivePrices(data.prices);
+          }
+        }
+      } catch (e) {
+        console.error("Failed to fetch live prices in MarketTicker", e);
+      }
+    };
+
+    fetchLivePrices();
+    const interval = setInterval(fetchLivePrices, 15000);
+    return () => clearInterval(interval);
+  }, []);
 
   const filteredMarketCoins = MARKET_COINS.filter((coin) =>
     coin.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -250,56 +282,63 @@ export const MarketTicker = () => {
 
           {/* Coin cards grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-gray-100 dark:divide-white/[0.05]">
-            {COINS.map((coin) => (
-              <div
-                key={coin.symbol}
-                className="px-6 py-5 flex flex-col gap-2 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors cursor-pointer"
-              >
-                {/* Icon + Name + Pair */}
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 shrink-0 relative overflow-hidden flex items-center justify-center rounded-full bg-slate-100 dark:bg-white/5 p-0.5">
-                    <Image
-                      src={`/assets/coins/${coin.symbol.toLowerCase()}.svg`}
-                      alt={coin.name}
-                      width={32}
-                      height={32}
-                      className="object-contain"
-                      unoptimized
-                    />
+            {COINS.map((coin) => {
+              const live = livePrices[SYMBOL_TO_ID[coin.symbol]];
+              const price = live ? live.price : coin.price;
+              const change = live ? live.change24h : coin.change;
+              const volumeStr = live ? live.volume24h : formatVolume(coin.volume);
+
+              return (
+                <div
+                  key={coin.symbol}
+                  className="px-6 py-5 flex flex-col gap-2 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors cursor-pointer"
+                >
+                  {/* Icon + Name + Pair */}
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 shrink-0 relative overflow-hidden flex items-center justify-center rounded-full bg-slate-100 dark:bg-white/5 p-0.5">
+                      <Image
+                        src={`/assets/coins/${coin.symbol.toLowerCase()}.svg`}
+                        alt={coin.name}
+                        width={32}
+                        height={32}
+                        className="object-contain"
+                        unoptimized
+                      />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-gray-900 dark:text-white leading-tight">
+                        {coin.name}
+                      </p>
+                      <p className="text-xs text-secondary dark:text-secondary2 font-medium">
+                        {coin.symbol}/{coin.pair}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-bold text-gray-900 dark:text-white leading-tight">
-                      {coin.name}
-                    </p>
-                    <p className="text-xs text-secondary dark:text-secondary2 font-medium">
-                      {coin.symbol}/{coin.pair}
-                    </p>
+
+                  {/* Price */}
+                  <p className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">
+                    USD {formatPrice(price)}
+                  </p>
+
+                  {/* Volume + Change badge */}
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-secondary dark:text-secondary2 font-medium">
+                      {volumeStr}
+                    </span>
+                    <span
+                      className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full ${
+                        change >= 0
+                          ? "bg-success/10 text-success"
+                          : "bg-critical/10 text-critical"
+                      }`}
+                    >
+                      {change >= 0 ? "+" : ""}
+                      {change.toFixed(2)}%
+                    </span>
                   </div>
                 </div>
-
-                {/* Price */}
-                <p className="text-xl font-bold text-gray-900 dark:text-white tracking-tight">
-                  USD {formatPrice(coin.price)}
-                </p>
-
-                {/* Volume + Change badge */}
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-secondary dark:text-secondary2 font-medium">
-                    {formatVolume(coin.volume)}
-                  </span>
-                  <span
-                    className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full ${
-                      coin.change >= 0
-                        ? "bg-success/10 text-success"
-                        : "bg-critical/10 text-critical"
-                    }`}
-                  >
-                    {coin.change >= 0 ? "+" : ""}
-                    {coin.change.toFixed(2)}%
-                  </span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
@@ -371,7 +410,14 @@ export const MarketTicker = () => {
             </TableHeader>
             <TableBody>
               {filteredMarketCoins.map((coin) => {
-                const isPositive = coin.change >= 0;
+                const live = livePrices[SYMBOL_TO_ID[coin.symbol]];
+                const change = live ? live.change24h : coin.change;
+                const isPositive = change >= 0;
+                
+                const formattedPrice = live 
+                  ? "$" + live.price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                  : coin.price;
+
                 return (
                   <TableRow
                     key={coin.symbol}
@@ -423,7 +469,7 @@ export const MarketTicker = () => {
 
                     {/* Last Price */}
                     <TableCell className="text-right font-extrabold text-xs text-gray-900 dark:text-white">
-                      {coin.price}
+                      {formattedPrice}
                     </TableCell>
 
                     {/* 24h Change */}
@@ -433,7 +479,7 @@ export const MarketTicker = () => {
                       }`}
                     >
                       {isPositive ? "+" : ""}
-                      {coin.change.toFixed(2)}%
+                      {change.toFixed(2)}%
                     </TableCell>
 
                     {/* Market Cap */}

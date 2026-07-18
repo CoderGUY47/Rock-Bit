@@ -11,6 +11,7 @@ const CARDS_PER_PAGE = 8;
 export default function MarketsPage() {
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState<CryptoItem[]>([]);
+  const [livePrices, setLivePrices] = useState<Record<string, { price: number; change24h: number; volume24h: string }>>({});
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All');
   const [priceRange, setPriceRange] = useState('All');
@@ -20,11 +21,42 @@ export default function MarketsPage() {
   // Load items with a simulated skeleton loading delay
   useEffect(() => {
     setLoading(true);
-    const timer = setTimeout(() => {
-      setItems(getItems());
-      setLoading(false);
-    }, 600);
-    return () => clearTimeout(timer);
+    const initialItems = getItems();
+    setItems(initialItems);
+    setLoading(false);
+
+    // Fetch live prices immediately and then poll every 15 seconds
+    const fetchLivePrices = async () => {
+      try {
+        const res = await fetch('/api/crypto/prices');
+        if (res.ok) {
+          const data = await res.json();
+          if (data.prices) {
+            setLivePrices(data.prices);
+            
+            // Merge into items to update filters properly
+            setItems(prev => prev.map(item => {
+              const live = data.prices[item.id];
+              if (live) {
+                return {
+                  ...item,
+                  price: live.price,
+                  change24h: live.change24h,
+                  volume24h: live.volume24h
+                };
+              }
+              return item;
+            }));
+          }
+        }
+      } catch (e) {
+        console.error("Failed to fetch live prices", e);
+      }
+    };
+
+    fetchLivePrices();
+    const interval = setInterval(fetchLivePrices, 15000);
+    return () => clearInterval(interval);
   }, []);
 
   // Get list of unique categories

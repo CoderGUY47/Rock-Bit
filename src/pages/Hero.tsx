@@ -13,7 +13,7 @@ export const Hero = () => {
                 src="/assets/images/statistics.png"
                 alt=""
                 fill
-                className="object-contain opacity-[0.5] dark:opacity-[0.8]"
+                className="object-contain opacity-[0.2] dark:opacity-[0.15]"
                 unoptimized
               />
             </div>
