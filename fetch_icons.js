@@ -9,7 +9,7 @@ if (!fs.existsSync(iconsDir)) {
   fs.mkdirSync(iconsDir, { recursive: true });
 }
 
-const coins = ['btc', 'eth', 'usdt', 'bnb', 'sol', 'xrp', 'ada', 'avax', 'uni', 'aave', 'arb', 'op', 'link'];
+const coins = ['btc', 'eth', 'usdt', 'bnb', 'sol', 'xrp', 'ada', 'avax', 'uni', 'aave', 'arb', 'op', 'link', 'dot', 'doge', 'shib', 'matic', 'ltc', 'near', 'atom'];
 
 function downloadIcon(coin) {
   const url = `https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/${coin}.svg`;

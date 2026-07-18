@@ -6,7 +6,7 @@ import { getItems, CryptoItem } from '@/utils/items';
 import { FiSearch, FiSliders, FiTrendingUp, FiTrendingDown, FiStar } from 'react-icons/fi';
 import { AIRecommendations } from '@/components/AIRecommendations';
 
-const CARDS_PER_PAGE = 4;
+const CARDS_PER_PAGE = 20;
 
 export default function MarketsPage() {
   const [loading, setLoading] = useState(true);
@@ -169,9 +169,9 @@ export default function MarketsPage() {
 
         {/* Listing Grid */}
         {loading ? (
-          /* Skeleton Loader (4 items matching row layout) */
+          /* Skeleton Loader (8 items matching row layout) */
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {[...Array(CARDS_PER_PAGE)].map((_, i) => (
+            {[...Array(8)].map((_, i) => (
               <div key={i} className="bg-white dark:bg-[#141416]/90 border border-gray-100 dark:border-white/[0.06] rounded-3xl overflow-hidden shadow-sm flex flex-col h-[420px] animate-pulse">
                 <div className="h-44 bg-gray-200 dark:bg-gray-800 w-full" />
                 <div className="p-5 flex-1 flex flex-col justify-between">
@@ -209,14 +209,14 @@ export default function MarketsPage() {
             {paginatedItems.map((item) => (
               <div
                 key={item.id}
-                className="bg-white dark:bg-[#141416]/90 border border-gray-100 dark:border-white/[0.06] rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col h-[420px]"
+                className="bg-white dark:bg-[#141416]/90 border border-gray-100 dark:border-white/[0.06] rounded-3xl overflow-hidden shadow-sm flex flex-col h-[420px] group"
               >
                 {/* Image */}
                 <div className="h-44 relative bg-gray-50 dark:bg-[#1d1d22] overflow-hidden shrink-0">
                   <img
                     src={item.image}
                     alt={item.title}
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                    className="w-full h-full object-contain p-4 transition-transform duration-500 group-hover:scale-110"
                   />
                   <span className="absolute top-4 left-4 bg-gray-900/80 backdrop-blur-md text-white text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full tracking-wider">
                     {item.category}
