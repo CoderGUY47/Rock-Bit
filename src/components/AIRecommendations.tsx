@@ -72,12 +72,33 @@ export function AIRecommendations() {
     setRecommendations([]);
 
     try {
+      const items = getItems();
+      const itemsContext = items.map(i => `id: ${i.id}, title: ${i.title}, category: ${i.category}, price: ${i.price}, rating: ${i.rating}, desc: ${i.shortDesc}`).join('\n');
+
+      // 1. Try secure backend API (OpenRouter/OpenAI with OPENAI_API_KEY)
+      const res = await fetch('/api/ai/recommend', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ preference, customText, itemsContext })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.reply) {
+          const cleaned = data.reply.replace(/```json/g, '').replace(/```/g, '').trim();
+          const parsed: Recommendation[] = JSON.parse(cleaned);
+          if (Array.isArray(parsed)) {
+            setRecommendations(parsed);
+            setLoading(false);
+            return;
+          }
+        }
+      }
+
+      // 2. Client-side Gemini fallback
       if (apiKey) {
         const genAI = new GoogleGenerativeAI(apiKey);
         const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-
-        const items = getItems();
-        const itemsContext = items.map(i => `id: ${i.id}, title: ${i.title}, category: ${i.category}, price: ${i.price}, rating: ${i.rating}, desc: ${i.shortDesc}`).join('\n');
 
         const prompt = `You are the AI Recommendation Engine for Rock-Bit Crypto Exchange.
 Analyze the user's asset investment preference and recommend the top 2 matching tokens from the database.
@@ -107,14 +128,14 @@ Do not include any markdown format blocks or extra text outside the JSON.`;
         }
       }
 
-      // Fallback to Heuristics
+      // 3. Fallback to Heuristics
       setTimeout(() => {
         const results = getHeuristicRecommendations(preference, customText);
         setRecommendations(results);
         setLoading(false);
       }, 800);
     } catch (e) {
-      console.error('Gemini recommendations failed, falling back to heuristics', e);
+      console.error('AI recommendations failed, falling back to heuristics', e);
       const results = getHeuristicRecommendations(preference, customText);
       setRecommendations(results);
       setLoading(false);

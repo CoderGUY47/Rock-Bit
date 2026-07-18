@@ -168,6 +168,32 @@ export const ChatAssistant = () => {
     setIsTyping(true);
 
     try {
+      // 1. Try secure backend API (OpenRouter/OpenAI with OPENAI_API_KEY)
+      const formattedHistory = messages.map(msg => ({
+        role: msg.sender === 'user' ? 'user' : 'assistant',
+        content: msg.text
+      }));
+
+      const res = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text, history: formattedHistory })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.reply) {
+          setMessages((prev) => [
+            ...prev,
+            { sender: "ai", text: data.reply.trim() },
+          ]);
+          handleAssistantAction(data.reply);
+          setIsTyping(false);
+          return;
+        }
+      }
+
+      // 2. Client-side Gemini key fallback
       if (apiKey) {
         const genAI = new GoogleGenerativeAI(apiKey);
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
@@ -213,15 +239,16 @@ Explain crypto topics (DeFi, staking, blockchain) clearly and keep replies under
         }
       }
 
-      // Fallback
+      // 3. Heuristics fallback
       setTimeout(async () => {
         const reply = await generateSimulatedResponse(text);
         setMessages((prev) => [...prev, { sender: "ai", text: reply }]);
         handleAssistantAction(reply);
         setIsTyping(false);
       }, 1000);
+
     } catch (error) {
-      console.error("Gemini chat failed, using fallback", error);
+      console.error("AI chat failed, using fallback", error);
       setTimeout(async () => {
         const reply = await generateSimulatedResponse(text);
         setMessages((prev) => [...prev, { sender: "ai", text: reply }]);
