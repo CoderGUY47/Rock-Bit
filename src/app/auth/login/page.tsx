@@ -112,14 +112,71 @@ export default function LoginPage() {
             />
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3.5 rounded-full font-bold text-xs bg-primary hover:bg-primary/95 text-white shadow-lg shadow-primary/20 mt-4 cursor-pointer transition-colors duration-200 border-none outline-none disabled:opacity-50"
-          >
-            {loading ? "Logging in..." : "Login"}
-          </button>
+          <div className="flex flex-col gap-2 pt-2">
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3.5 rounded-full font-bold text-xs bg-primary hover:bg-primary/95 text-white shadow-lg shadow-primary/20 cursor-pointer transition-colors duration-200 border-none outline-none disabled:opacity-50"
+            >
+              {loading ? "Logging in..." : "Login"}
+            </button>
+
+            {/* Demo Login Button (Auto-fill required) */}
+            <button
+              type="button"
+              onClick={() => {
+                setEmail("user@gmail.com");
+                setPassword("123456");
+                // Immediately submit or allow user to see it prefilled and click login
+              }}
+              className="w-full py-3 rounded-full font-bold text-xs bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200 border-none outline-none cursor-pointer"
+            >
+              Demo Auto-Fill Credentials
+            </button>
+          </div>
         </form>
+
+        {/* Divider */}
+        <div className="my-6 flex items-center justify-between gap-4">
+          <div className="h-px bg-gray-100 dark:bg-gray-800 flex-1" />
+          <span className="text-[10px] font-bold uppercase tracking-wider text-gray-400">or continue with</span>
+          <div className="h-px bg-gray-100 dark:bg-gray-800 flex-1" />
+        </div>
+
+        {/* Social Login Button */}
+        <button
+          type="button"
+          onClick={async () => {
+            setLoading(true);
+            // Simulate Google Login
+            localStorage.setItem("auth_logged_in", "true");
+            setTimeout(() => {
+              router.push("/");
+              router.refresh();
+            }, 800);
+          }}
+          className="w-full py-3 rounded-full border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center justify-center gap-2 text-xs font-bold text-gray-700 dark:text-gray-200 transition-colors duration-200 cursor-pointer"
+        >
+          <svg className="w-4 h-4" viewBox="0 0 24 24">
+            <path
+              fill="#4285F4"
+              d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v3.9h6.6c-.28 1.5-1.12 2.77-2.38 3.61v3h3.84c2.25-2.07 3.68-5.12 3.68-8.44z"
+            />
+            <path
+              fill="#34A853"
+              d="M12 24c3.24 0 5.97-1.08 7.96-2.91l-3.84-3c-1.07.72-2.44 1.15-4.12 1.15-3.17 0-5.85-2.14-6.81-5.02H1.27v3.1A11.996 11.996 0 0012 24z"
+            />
+            <path
+              fill="#FBBC05"
+              d="M5.19 14.22c-.24-.72-.38-1.49-.38-2.22s.14-1.5.38-2.22V6.68H1.27a11.956 11.956 0 000 10.64l3.92-3.1z"
+            />
+            <path
+              fill="#EA4335"
+              d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.22 0 12 0 7.29 0 3.2 2.73 1.27 6.68l3.92 3.1c.96-2.88 3.64-5.03 6.81-5.03z"
+            />
+          </svg>
+          <span>Google Account</span>
+        </button>
 
         <div className="mt-8 text-center text-xs font-medium text-gray-400 dark:text-gray-500">
           Don't have an account?{" "}
