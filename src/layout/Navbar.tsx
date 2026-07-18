@@ -92,13 +92,6 @@ export const Navbar = () => {
                 >
                   Spot
                 </Link>
-                <Link
-                  href="/markets"
-                  className="h-full px-5 flex items-center gap-1.5 text-sm font-semibold text-secondary hover:bg-primary hover:text-white dark:text-secondary2 dark:hover:text-white transition-colors group"
-                >
-                  <span>BITUSDT</span>
-                  <BsDropletFill className="text-primary group-hover:text-white w-2.5 h-2.5 transition-colors" />
-                </Link>
 
                 {/* Pages Dropdown */}
                 <div className="relative h-full flex items-center">
