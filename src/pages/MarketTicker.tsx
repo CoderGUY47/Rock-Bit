@@ -259,7 +259,7 @@ export const MarketTicker = () => {
                 <div className="flex items-center gap-2.5">
                   <div className="w-8 h-8 shrink-0 relative overflow-hidden flex items-center justify-center rounded-full bg-slate-100 dark:bg-white/5 p-0.5">
                     <Image
-                      src={`https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/${coin.symbol.toLowerCase()}.svg`}
+                      src={`/assets/coins/${coin.symbol.toLowerCase()}.svg`}
                       alt={coin.name}
                       width={32}
                       height={32}
@@ -402,7 +402,7 @@ export const MarketTicker = () => {
                       <div className="flex items-center gap-3 select-none">
                         <div className="w-7 h-7 shrink-0 relative overflow-hidden flex items-center justify-center rounded-full bg-slate-100 dark:bg-white/5 p-0.5">
                           <Image
-                            src={`https://cdn.jsdelivr.net/npm/cryptocurrency-icons@0.18.1/svg/color/${coin.symbol.toLowerCase()}.svg`}
+                            src={`/assets/coins/${coin.symbol.toLowerCase()}.svg`}
                             alt={coin.name}
                             width={28}
                             height={28}

@@ -22,7 +22,7 @@ const DEFAULT_ITEMS: CryptoItem[] = [
     price: 92450.00,
     rating: 4.9,
     category: "L1",
-    image: "https://images.unsplash.com/photo-1516245834210-c4c142787335?q=80&w=600&auto=format&fit=crop",
+    image: "/assets/coins/btc.svg",
     change24h: 3.42,
     volume24h: "$35.2B",
     dateAdded: "2009-01-03"
@@ -35,7 +35,7 @@ const DEFAULT_ITEMS: CryptoItem[] = [
     price: 3420.50,
     rating: 4.8,
     category: "L1",
-    image: "https://images.unsplash.com/photo-1622790698141-94e304bc7ef9?q=80&w=600&auto=format&fit=crop",
+    image: "/assets/coins/eth.svg",
     change24h: 1.85,
     volume24h: "$18.7B",
     dateAdded: "2015-07-30"
@@ -48,7 +48,7 @@ const DEFAULT_ITEMS: CryptoItem[] = [
     price: 212.80,
     rating: 4.7,
     category: "L1",
-    image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=600&auto=format&fit=crop",
+    image: "/assets/coins/sol.svg",
     change24h: 5.12,
     volume24h: "$4.1B",
     dateAdded: "2020-03-16"
@@ -61,7 +61,7 @@ const DEFAULT_ITEMS: CryptoItem[] = [
     price: 11.25,
     rating: 4.5,
     category: "DeFi",
-    image: "https://images.unsplash.com/photo-1621761191319-c6fb62004040?q=80&w=600&auto=format&fit=crop",
+    image: "/assets/coins/uni.svg",
     change24h: -1.24,
     volume24h: "$850M",
     dateAdded: "2018-11-02"
@@ -74,7 +74,7 @@ const DEFAULT_ITEMS: CryptoItem[] = [
     price: 185.40,
     rating: 4.6,
     category: "DeFi",
-    image: "https://images.unsplash.com/photo-1642790106117-e829e14a795f?q=80&w=600&auto=format&fit=crop",
+    image: "/assets/coins/aave.svg",
     change24h: 2.15,
     volume24h: "$340M",
     dateAdded: "2020-10-02"
@@ -87,7 +87,7 @@ const DEFAULT_ITEMS: CryptoItem[] = [
     price: 1.15,
     rating: 4.4,
     category: "Layer 2",
-    image: "https://images.unsplash.com/photo-1620321023374-d1a68fbc720d?q=80&w=600&auto=format&fit=crop",
+    image: "/assets/coins/arb.png",
     change24h: -3.10,
     volume24h: "$510M",
     dateAdded: "2021-08-31"
@@ -100,7 +100,7 @@ const DEFAULT_ITEMS: CryptoItem[] = [
     price: 2.35,
     rating: 4.3,
     category: "Layer 2",
-    image: "https://images.unsplash.com/photo-1639762681057-408021931149?q=80&w=600&auto=format&fit=crop",
+    image: "/assets/coins/op.png",
     change24h: 0.45,
     volume24h: "$220M",
     dateAdded: "2022-05-31"
@@ -113,7 +113,7 @@ const DEFAULT_ITEMS: CryptoItem[] = [
     price: 18.20,
     rating: 4.6,
     category: "Oracle",
-    image: "https://images.unsplash.com/photo-1605792657660-596af9009e82?q=80&w=600&auto=format&fit=crop",
+    image: "/assets/coins/link.svg",
     change24h: 4.10,
     volume24h: "$640M",
     dateAdded: "2017-09-19"
