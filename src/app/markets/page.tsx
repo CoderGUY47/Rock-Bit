@@ -6,7 +6,7 @@ import { getItems, CryptoItem } from '@/utils/items';
 import { FiSearch, FiSliders, FiTrendingUp, FiTrendingDown, FiStar } from 'react-icons/fi';
 import { AIRecommendations } from '@/components/AIRecommendations';
 
-const CARDS_PER_PAGE = 20;
+const CARDS_PER_PAGE = 8;
 
 export default function MarketsPage() {
   const [loading, setLoading] = useState(true);
