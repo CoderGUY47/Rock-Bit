@@ -6,10 +6,15 @@ import { FiCheck, FiCopy, FiChevronRight } from 'react-icons/fi';
 
 // ─── Types ──────────────────────────────────────────────────────────────
 type Step = 1 | 2 | 3;
+type Mode = 'buy' | 'sell';
 
 // ─── Step Indicator ─────────────────────────────────────────────────────
-function StepBar({ step }: { step: Step }) {
-  const steps = ['Select currency', 'Confirm Payment', 'Payment Details'];
+function StepBar({ step, mode }: { step: Step; mode: Mode }) {
+  const steps = [
+    'Select currency',
+    mode === 'buy' ? 'Confirm Payment' : 'Confirm Sale',
+    mode === 'buy' ? 'Payment Details' : 'Sale Details'
+  ];
   return (
     <div className="flex items-center gap-0 mb-8">
       {steps.map((label, i) => {
@@ -40,58 +45,90 @@ function StepBar({ step }: { step: Step }) {
 }
 
 // ─── Step 1: Select Currency ─────────────────────────────────────────────
-function SelectCurrency({ onNext }: { onNext: () => void }) {
-  const [payAmount, setPayAmount] = useState('3,000,000');
-  const [payCurrency, setPayCurrency] = useState('VND');
-  const btcAmount = (parseFloat(payAmount.replace(/,/g, '')) / 1450000000).toFixed(8);
+function SelectCurrency({ onNext, mode }: { onNext: () => void; mode: Mode }) {
+  const [amount, setAmount] = useState(mode === 'buy' ? '3,000,000' : '0.002');
+  const [fiatCurrency, setFiatCurrency] = useState('VND');
+
+  const calculatedValue = mode === 'buy'
+    ? (parseFloat(amount.replace(/,/g, '')) / 1450000000).toFixed(8)
+    : (parseFloat(amount) * 1450000000).toLocaleString(undefined, { maximumFractionDigits: 0 });
 
   return (
     <div className="bg-white dark:bg-on-surface border border-gray-100 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
-      <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Select Currency</h2>
+      <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
+        {mode === 'buy' ? 'Select Currency to Buy' : 'Select Currency to Sell'}
+      </h2>
       <p className="text-xs text-gray-400 mb-6">Reference Price: 1,450,939,280.43 VND/BTC</p>
 
-      <div className="flex items-center gap-4">
-        {/* Pay */}
-        <div className="flex-1">
-          <p className="text-xs text-gray-500 mb-2 font-medium">Pay</p>
+      <div className="flex flex-col md:flex-row items-center gap-4">
+        {/* Left Side Input */}
+        <div className="flex-1 w-full">
+          <p className="text-xs text-gray-500 mb-2 font-medium">
+            {mode === 'buy' ? 'Pay' : 'Sell'}
+          </p>
           <div className="flex items-center border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden bg-gray-50 dark:bg-[#1d1d22]">
             <input
               type="text"
-              value={payAmount}
-              onChange={(e) => setPayAmount(e.target.value)}
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
               className="flex-1 px-4 py-3 text-sm font-semibold bg-transparent text-gray-900 dark:text-white outline-none"
             />
             <div className="flex items-center gap-1.5 px-3 border-l border-gray-200 dark:border-gray-700">
-              <span className="text-yellow-500 text-lg">₮</span>
-              <select value={payCurrency} onChange={(e) => setPayCurrency(e.target.value)}
-                className="text-xs font-bold bg-transparent text-gray-700 dark:text-gray-200 outline-none cursor-pointer">
-                <option>VND</option>
-                <option>USD</option>
-                <option>EUR</option>
-              </select>
+              {mode === 'buy' ? (
+                <>
+                  <span className="text-blue-500 font-bold text-xs">VND</span>
+                  <select value={fiatCurrency} onChange={(e) => setFiatCurrency(e.target.value)}
+                    className="text-xs font-bold bg-transparent text-gray-700 dark:text-gray-200 outline-none cursor-pointer">
+                    <option>VND</option>
+                    <option>USD</option>
+                    <option>EUR</option>
+                  </select>
+                </>
+              ) : (
+                <>
+                  <img src="/assets/coins/btc.svg" alt="BTC" className="w-4 h-4 object-contain" />
+                  <span className="text-xs font-bold text-gray-700 dark:text-gray-200">BTC</span>
+                </>
+              )}
             </div>
           </div>
         </div>
 
         {/* Swap icon */}
-        <div className="mt-6 w-9 h-9 rounded-full bg-primary flex items-center justify-center shrink-0 cursor-pointer">
+        <div className="w-9 h-9 rounded-full bg-primary flex items-center justify-center shrink-0">
           <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <path d="M8 3L4 7l4 4M4 7h16M16 21l4-4-4-4M20 17H4" />
           </svg>
         </div>
 
-        {/* Receive */}
-        <div className="flex-1">
-          <p className="text-xs text-gray-500 mb-2 font-medium">Receive</p>
+        {/* Right Side Input */}
+        <div className="flex-1 w-full">
+          <p className="text-xs text-gray-500 mb-2 font-medium">
+            {mode === 'buy' ? 'Receive' : 'Receive Estimated'}
+          </p>
           <div className="flex items-center border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden bg-gray-50 dark:bg-[#1d1d22]">
             <input
               readOnly
-              value={btcAmount}
+              value={calculatedValue}
               className="flex-1 px-4 py-3 text-sm font-semibold bg-transparent text-gray-900 dark:text-white outline-none"
             />
             <div className="flex items-center gap-1.5 px-3 border-l border-gray-200 dark:border-gray-700">
-              <span className="text-yellow-400 text-lg">₿</span>
-              <span className="text-xs font-bold text-gray-700 dark:text-gray-200">BTC</span>
+              {mode === 'buy' ? (
+                <>
+                  <img src="/assets/coins/btc.svg" alt="BTC" className="w-4 h-4 object-contain" />
+                  <span className="text-xs font-bold text-gray-700 dark:text-gray-200">BTC</span>
+                </>
+              ) : (
+                <>
+                  <span className="text-blue-500 font-bold text-xs">VND</span>
+                  <select value={fiatCurrency} onChange={(e) => setFiatCurrency(e.target.value)}
+                    className="text-xs font-bold bg-transparent text-gray-700 dark:text-gray-200 outline-none cursor-pointer">
+                    <option>VND</option>
+                    <option>USD</option>
+                    <option>EUR</option>
+                  </select>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -107,40 +144,67 @@ function SelectCurrency({ onNext }: { onNext: () => void }) {
   );
 }
 
-// ─── Step 2: Confirm Payment ──────────────────────────────────────────────
-function ConfirmPayment({ onNext, onBack }: { onNext: () => void; onBack: () => void }) {
-  const paymentDetails = [
+// ─── Step 2: Confirm Payment / Sale ──────────────────────────────────────────────
+function ConfirmPayment({ onNext, onBack, mode }: { onNext: () => void; onBack: () => void; mode: Mode }) {
+  const details = mode === 'buy' ? [
     { label: 'Account name', value: 'Veum Cecilia' },
     { label: 'Account number', value: '548422222221' },
     { label: 'Address', value: '079 Dariana Knoll, CA' },
     { label: 'SWIFT Code', value: 'UI8' },
     { label: 'Bank Address', value: '55416 Powlowski Spring, CA' },
+  ] : [
+    { label: 'Recipient Name', value: 'Rockie' },
+    { label: 'Payout Currency', value: 'VND' },
+    { label: 'Bank Account / IBAN', value: 'VN-8942-1111-2222' },
+    { label: 'Reference Number', value: 'REF-SALE-991A' }
   ];
 
   return (
     <div className="space-y-5">
       {/* Confirm info box */}
       <div className="bg-white dark:bg-on-surface border border-gray-100 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
-        <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Confirm Information</h2>
-        <p className="text-xs text-gray-400 mb-5">You Are About To Receive 1.356 BTC for Bitcloud Bank</p>
+        <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-1">
+          {mode === 'buy' ? 'Confirm Information' : 'Confirm Sale Order'}
+        </h2>
+        <p className="text-xs text-gray-400 mb-5">
+          {mode === 'buy' ? 'You Are About To Receive 1.356 BTC for Bitcloud Bank' : 'You Are About To Sell 0.002 BTC for Local Bank Payout'}
+        </p>
 
         <div className="flex items-center gap-6">
           <div className="flex flex-col items-center gap-1">
             <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-              <span className="text-blue-500 text-lg font-bold">₮</span>
+              {mode === 'buy' ? (
+                <span className="text-blue-500 font-extrabold text-xs">VND</span>
+              ) : (
+                <img src="/assets/coins/btc.svg" alt="BTC" className="w-6 h-6 object-contain" />
+              )}
             </div>
-            <span className="text-[10px] text-gray-400">Pay</span>
-            <span className="text-sm font-bold text-gray-900 dark:text-white">3,000,000 VND</span>
+            <span className="text-[10px] text-gray-400">
+              {mode === 'buy' ? 'Pay' : 'Sell'}
+            </span>
+            <span className="text-sm font-bold text-gray-900 dark:text-white">
+              {mode === 'buy' ? '3,000,000 VND' : '0.002 BTC'}
+            </span>
           </div>
+          
           <FiChevronRight className="text-gray-400 w-5 h-5" />
+          
           <div className="flex flex-col items-center gap-1">
             <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-              <span className="text-green-500 text-lg font-bold">₿</span>
+              {mode === 'buy' ? (
+                <img src="/assets/coins/btc.svg" alt="BTC" className="w-6 h-6 object-contain" />
+              ) : (
+                <span className="text-green-500 font-extrabold text-xs">VND</span>
+              )}
             </div>
             <span className="text-[10px] text-gray-400">Get</span>
-            <span className="text-sm font-bold text-gray-900 dark:text-white">0.00207026 BTC</span>
+            <span className="text-sm font-bold text-gray-900 dark:text-white">
+              {mode === 'buy' ? '0.00207026 BTC' : '2,900,000 VND'}
+            </span>
           </div>
+
           <FiChevronRight className="text-gray-400 w-5 h-5" />
+
           <div className="flex flex-col items-center gap-1">
             <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
               <span className="text-purple-500 text-lg">👤</span>
@@ -153,10 +217,11 @@ function ConfirmPayment({ onNext, onBack }: { onNext: () => void; onBack: () => 
 
       {/* Payment Details */}
       <div className="bg-white dark:bg-on-surface border border-gray-100 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
-        <h3 className="text-base font-bold text-gray-900 dark:text-white mb-4">Payment Details</h3>
-        <p className="text-xs font-semibold text-gray-500 mb-3">Bank account</p>
+        <h3 className="text-base font-bold text-gray-900 dark:text-white mb-4">
+          {mode === 'buy' ? 'Payment Details' : 'Payout Details'}
+        </h3>
         <div className="space-y-3">
-          {paymentDetails.map(({ label, value }) => (
+          {details.map(({ label, value }) => (
             <div key={label}>
               <label className="text-xs text-gray-400 mb-1 block">{label}</label>
               <input readOnly value={value}
@@ -165,14 +230,16 @@ function ConfirmPayment({ onNext, onBack }: { onNext: () => void; onBack: () => 
           ))}
         </div>
 
-        <div className="mt-4">
-          <p className="text-sm font-bold text-gray-900 dark:text-white mb-1">Reference code</p>
-          <p className="text-xs text-gray-400 mb-2">You MUST include the Reference Code in your deposit in order to credit your account!</p>
-          <p className="text-xs text-gray-400 mb-2">Reference Code:</p>
-          <div className="border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-center font-bold text-sm text-gray-900 dark:text-white bg-gray-50 dark:bg-[#1d1d22]">
-            BLUTUKHY34PB
+        {mode === 'buy' && (
+          <div className="mt-4">
+            <p className="text-sm font-bold text-gray-900 dark:text-white mb-1">Reference code</p>
+            <p className="text-xs text-gray-400 mb-2">You MUST include the Reference Code in your deposit in order to credit your account!</p>
+            <p className="text-xs text-gray-400 mb-2">Reference Code:</p>
+            <div className="border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-center font-bold text-sm text-gray-900 dark:text-white bg-gray-50 dark:bg-[#1d1d22]">
+              BLUTUKHY34PB
+            </div>
           </div>
-        </div>
+        )}
 
         <div className="mt-5 flex gap-3">
           <button onClick={onBack}
@@ -181,7 +248,7 @@ function ConfirmPayment({ onNext, onBack }: { onNext: () => void; onBack: () => 
           </button>
           <button onClick={onNext}
             className="flex-1 py-3 rounded-full bg-primary hover:bg-primary/90 text-white font-bold text-sm transition-colors cursor-pointer">
-            Let's move on!
+            {mode === 'buy' ? "Let's move on!" : 'Confirm Sale'}
           </button>
         </div>
       </div>
@@ -190,13 +257,18 @@ function ConfirmPayment({ onNext, onBack }: { onNext: () => void; onBack: () => 
 }
 
 // ─── Step 3: Success / Payment Complete ───────────────────────────────────
-function PaymentComplete({ onReset }: { onReset: () => void }) {
-  const paymentDetails = [
+function PaymentComplete({ onReset, mode }: { onReset: () => void; mode: Mode }) {
+  const details = mode === 'buy' ? [
     { label: 'Account name', value: 'Veum Cecilia' },
     { label: 'Account number', value: '548422222221' },
     { label: 'Address', value: '079 Dariana Knoll, CA' },
     { label: 'SWIFT Code', value: 'UI8' },
     { label: 'Bank Address', value: '55416 Powlowski Spring, CA' },
+  ] : [
+    { label: 'Recipient Name', value: 'Rockie' },
+    { label: 'Bank Payout Account', value: 'VN-8942-1111-2222' },
+    { label: 'Sale Status', value: 'Completed' },
+    { label: 'Reference Number', value: 'REF-SALE-991A' }
   ];
 
   return (
@@ -209,7 +281,11 @@ function PaymentComplete({ onReset }: { onReset: () => void }) {
             <FiCheck className="w-4 h-4 text-white" strokeWidth={3} />
           </span>
         </h2>
-        <p className="text-sm text-gray-500 mb-6">You successfully bought <span className="font-bold text-gray-900 dark:text-white">1.356 BTC</span> for Rockie!</p>
+        <p className="text-sm text-gray-500 mb-6">
+          {mode === 'buy'
+            ? 'You successfully bought 1.356 BTC for Rockie!'
+            : 'You successfully sold 0.002 BTC for Rockie!'}
+        </p>
 
         <div className="border border-gray-100 dark:border-gray-800 rounded-xl overflow-hidden">
           <div className="flex justify-between items-center px-4 py-3 border-b border-gray-100 dark:border-gray-800">
@@ -223,14 +299,15 @@ function PaymentComplete({ onReset }: { onReset: () => void }) {
         </div>
       </div>
 
-      {/* Payment Details */}
+      {/* Details Box */}
       <div className="bg-white dark:bg-on-surface border border-gray-100 dark:border-gray-800 rounded-2xl p-6 shadow-sm">
-        <h3 className="text-base font-bold text-gray-900 dark:text-white mb-4">Payment Details</h3>
-        <p className="text-xs font-semibold text-gray-500 mb-3">Bank account</p>
+        <h3 className="text-base font-bold text-gray-900 dark:text-white mb-4">
+          {mode === 'buy' ? 'Payment Details' : 'Payout Details'}
+        </h3>
 
         <div className="space-y-3">
-          {paymentDetails.map(({ label, value }) => (
-            <div key={label} className="flex justify-between items-center py-2 border-b border-gray-50 dark:border-gray-800/50">
+          {details.map(({ label, value }) => (
+            <div key={label} className="flex justify-between items-center py-2 border-b border-gray-55 dark:border-gray-800/50">
               <span className="text-sm text-gray-500">{label}</span>
               <div className="flex items-center gap-2">
                 <span className="text-sm font-bold text-gray-900 dark:text-white">{value}</span>
@@ -242,16 +319,18 @@ function PaymentComplete({ onReset }: { onReset: () => void }) {
           ))}
         </div>
 
-        <div className="mt-4 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-center font-bold text-sm text-gray-900 dark:text-white bg-gray-50 dark:bg-[#1d1d22]">
-          BLUTUKHY34PB
-        </div>
+        {mode === 'buy' && (
+          <div className="mt-4 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-center font-bold text-sm text-gray-900 dark:text-white bg-gray-50 dark:bg-[#1d1d22]">
+            BLUTUKHY34PB
+          </div>
+        )}
 
         <div className="mt-5 flex gap-3">
           <button onClick={onReset}
             className="flex-1 py-3 rounded-full border-2 border-primary text-primary font-bold text-sm hover:bg-primary/5 transition-colors cursor-pointer">
             Trade!
           </button>
-          <Link href="/dashboard"
+          <Link href="/"
             className="flex-1 py-3 rounded-full bg-primary hover:bg-primary/90 text-white font-bold text-sm text-center transition-colors cursor-pointer">
             Wallet
           </Link>
@@ -264,54 +343,56 @@ function PaymentComplete({ onReset }: { onReset: () => void }) {
 // ─── Main Page ────────────────────────────────────────────────────────────
 export default function CheckoutPage() {
   const [step, setStep] = useState<Step>(1);
-  const [activeTab, setActiveTab] = useState<'buy' | 'sell'>('buy');
-
-  const stepLabels = ['Select currency', 'Confirm Payment', 'Payment Details'];
+  const [activeTab, setActiveTab] = useState<Mode>('buy');
 
   return (
     <div className="bg-[#f8f9fa] dark:bg-[#0c0c0e] min-h-screen">
       {/* Breadcrumb */}
       <div className="border-b border-gray-100 dark:border-gray-800 bg-white dark:bg-on-surface">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Buy Crypto</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
+            {activeTab === 'buy' ? 'Buy Crypto' : 'Sell Crypto'}
+          </h1>
           <nav className="flex items-center gap-2 text-sm text-gray-400">
             <Link href="/" className="hover:text-primary transition-colors">Home</Link>
             <span>/</span>
-            <span className="text-gray-700 dark:text-gray-200 font-medium">Buy Crypto</span>
+            <span className="text-gray-700 dark:text-gray-200 font-medium">
+              {activeTab === 'buy' ? 'Buy Crypto' : 'Sell Crypto'}
+            </span>
           </nav>
         </div>
       </div>
 
       {/* Main content */}
       <div className="max-w-7xl mx-auto w-full px-6 py-10">
-        <div className="flex gap-8 items-start">
+        <div className="flex flex-col lg:flex-row gap-8 items-start">
 
           {/* ── Left Sidebar ── */}
-          <aside className="hidden lg:flex flex-col gap-1 w-56 shrink-0">
-            <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 px-3">Overview</p>
+          <aside className="w-full lg:w-56 shrink-0 flex lg:flex-col gap-1.5">
+            <div className="hidden lg:block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 px-3">Overview</div>
             <button
               onClick={() => { setActiveTab('buy'); setStep(1); }}
-              className={`w-full text-left px-4 py-3 rounded-xl font-semibold text-sm transition-colors cursor-pointer
-                ${activeTab === 'buy' ? 'bg-primary text-white shadow-md shadow-primary/20' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'}`}
+              className={`flex-1 lg:flex-none text-center lg:text-left px-5 py-3.5 rounded-2xl font-extrabold text-xs uppercase tracking-wider transition-all cursor-pointer
+                ${activeTab === 'buy' ? 'bg-primary text-white shadow-md shadow-primary/20' : 'bg-white dark:bg-[#141416]/90 border border-gray-100 dark:border-white/[0.06] text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'}`}
             >
               Buy Crypto
             </button>
             <button
-              onClick={() => setActiveTab('sell')}
-              className={`w-full text-left px-4 py-3 rounded-xl font-semibold text-sm transition-colors cursor-pointer
-                ${activeTab === 'sell' ? 'bg-primary text-white shadow-md shadow-primary/20' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'}`}
+              onClick={() => { setActiveTab('sell'); setStep(1); }}
+              className={`flex-1 lg:flex-none text-center lg:text-left px-5 py-3.5 rounded-2xl font-extrabold text-xs uppercase tracking-wider transition-all cursor-pointer
+                ${activeTab === 'sell' ? 'bg-primary text-white shadow-md shadow-primary/20' : 'bg-white dark:bg-[#141416]/90 border border-gray-100 dark:border-white/[0.06] text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800'}`}
             >
               Sell Crypto
             </button>
           </aside>
 
           {/* ── Right Content ── */}
-          <div className="flex-1 min-w-0">
-            <StepBar step={step} />
+          <div className="flex-1 w-full min-w-0">
+            <StepBar step={step} mode={activeTab} />
 
-            {step === 1 && <SelectCurrency onNext={() => setStep(2)} />}
-            {step === 2 && <ConfirmPayment onNext={() => setStep(3)} onBack={() => setStep(1)} />}
-            {step === 3 && <PaymentComplete onReset={() => setStep(1)} />}
+            {step === 1 && <SelectCurrency onNext={() => setStep(2)} mode={activeTab} />}
+            {step === 2 && <ConfirmPayment onNext={() => setStep(3)} onBack={() => setStep(1)} mode={activeTab} />}
+            {step === 3 && <PaymentComplete onReset={() => setStep(1)} mode={activeTab} />}
           </div>
         </div>
       </div>
