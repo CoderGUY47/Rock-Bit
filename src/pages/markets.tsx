@@ -9,6 +9,7 @@ import { FaStar } from 'react-icons/fa';
 import { AIRecommendations } from '@/components/AIRecommendations';
 import { LearnEarn } from '@/pages/LearnEarn';
 import { Button } from '@/components/button';
+import ReactPaginate from 'react-paginate';
 import {
   Table,
   TableHeader,
@@ -36,13 +37,13 @@ export default function MarketsPage() {
   const [loading, setLoading] = useState(true);
   const [items, setItems] = useState<CryptoItem[]>([]);
   const [livePrices, setLivePrices] = useState<Record<string, { price: number; change24h: number; volume24h: string }>>({});
-  
+
   // Navigation & Filter states
   const [activeMainTab, setActiveMainTab] = useState('Favorites');
   const [activeSubTab, setActiveSubTab] = useState('All');
   const [activeFilterTag, setActiveFilterTag] = useState('Hot');
   const [searchQuery, setSearchQuery] = useState('');
-  
+
   const [currentPage, setCurrentPage] = useState(1);
 
   // Load items with live prices polling
@@ -59,7 +60,7 @@ export default function MarketsPage() {
           const data = await res.json();
           if (data.prices) {
             setLivePrices(data.prices);
-            
+
             // Merge live prices into main items
             setItems(prev => prev.map(item => {
               const live = data.prices[item.id];
@@ -88,7 +89,7 @@ export default function MarketsPage() {
   // Filter based on Search and active tab category mappings
   const filteredItems = items.filter(item => {
     // 1. Search Query
-    const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           item.id.toLowerCase().includes(searchQuery.toLowerCase());
     if (!matchesSearch) return false;
 
@@ -124,22 +125,22 @@ export default function MarketsPage() {
 
   return (
     <div className="bg-[#f8f9fa] dark:bg-[#0c0c0e] min-h-screen transition-colors duration-200">
-      
+
       {/* ─── 1. Top Banner Section ─── */}
       <section className="relative w-full bg-slate-50 dark:bg-[#141416]/50 py-12 overflow-hidden select-none border-b border-gray-100 dark:border-white/[0.03]">
         {/* Background Handshake Illustration */}
         <div className="absolute top-0 right-0 bottom-0 w-[45%] z-0 pointer-events-none select-none overflow-hidden opacity-10 dark:opacity-30">
           <Image
-            src="/assets/images/support.png"
+            src="/assets/images/statistics.png"
             alt="Handshake illustration"
             fill
             className="object-contain"
             unoptimized
           />
         </div>
-        
+
         <div className="max-w-7xl mx-auto px-6 relative z-10 flex flex-col justify-center text-left">
-          <h1 className="text-4xl font-extrabold text-gray-950 dark:text-white leading-tight tracking-tight mb-2">
+          <h1 className="text-4xl font-bold text-gray-950 dark:text-white leading-tight tracking-tight mb-2">
             Today's Cryptocurrency prices
           </h1>
           <p className="text-sm font-semibold text-secondary dark:text-gray-400">
@@ -158,15 +159,15 @@ export default function MarketsPage() {
             const isPositive = change >= 0;
 
             return (
-              <div 
+              <div
                 key={coin.id}
                 className="bg-white dark:bg-[#141416] border border-gray-100 dark:border-white/[0.05] rounded-2xl p-5 shadow-md flex items-center justify-between gap-4"
               >
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0" style={{ backgroundColor: `${coin.color}15` }}>
-                    <img 
-                      src={`/assets/coins/${coin.symbol.toLowerCase()}.svg`} 
-                      alt={coin.name} 
+                    <img
+                      src={`/assets/coins/${coin.symbol.toLowerCase()}.svg`}
+                      alt={coin.name}
                       className="w-6 h-6 object-contain"
                     />
                   </div>
@@ -191,12 +192,12 @@ export default function MarketsPage() {
 
       {/* ─── 3. Explore & Filter Section ─── */}
       <div className="max-w-7xl mx-auto px-6 py-10 space-y-6">
-        
+
         <AIRecommendations />
 
         {/* Filters and Navigation bar */}
         <div className="bg-white dark:bg-[#141416]/90 border border-gray-100 dark:border-white/[0.05] rounded-3xl p-6 shadow-sm space-y-5">
-          
+
           {/* Main category tabs */}
           <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-100 dark:border-white/[0.05] pb-4">
             <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-hide">
@@ -266,7 +267,7 @@ export default function MarketsPage() {
           </div>
 
           {/* ─── 4. Main Market Listings Table ─── */}
-          <div className="border border-gray-100 dark:border-white/[0.05] rounded-2xl overflow-hidden bg-white dark:bg-[#141416]/50">
+          <div className="border border-gray-100 dark:border-white/[0.05] rounded-2xl overflow-hidden bg-white dark:bg-[#141416]/50 min-h-[580px]">
             {loading ? (
               <div className="py-20 text-center text-xs font-semibold text-gray-400 animate-pulse">
                 Fetching live asset prices...
@@ -295,14 +296,14 @@ export default function MarketsPage() {
                     const price = item.price;
                     const change = item.change24h;
                     const isPositive = change >= 0;
-                    
+
                     // Simple simulated high/low/turnover mapping
                     const high = price * 1.023;
                     const low = price * 0.978;
                     const volumeStr = item.volume24h;
 
                     // Sparkline path
-                    const sparkline = isPositive 
+                    const sparkline = isPositive
                       ? "M0 30 Q15 15 30 25 T60 15 T90 22 T120 8"
                       : "M0 15 Q15 30 30 20 T60 28 T90 18 T120 32";
 
@@ -407,40 +408,28 @@ export default function MarketsPage() {
 
           {/* Pagination controls */}
           {totalPages > 1 && (
-            <div className="flex justify-center items-center gap-1.5 pt-4">
-              <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="px-4 py-2 rounded-xl border border-gray-255 dark:border-gray-800 bg-white dark:bg-on-surface text-xs font-bold text-gray-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-              >
-                Previous
-              </button>
-              
-              {[...Array(totalPages)].map((_, i) => {
-                const pageNum = i + 1;
-                return (
-                  <button
-                    key={pageNum}
-                    onClick={() => handlePageChange(pageNum)}
-                    className={`w-9 h-9 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                      currentPage === pageNum
-                        ? 'bg-primary text-white shadow-md shadow-primary/20'
-                        : 'border border-gray-255 dark:border-gray-800 bg-white dark:bg-on-surface text-gray-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-800'
-                    }`}
-                  >
-                    {pageNum}
-                  </button>
-                );
-              })}
-
-              <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="px-4 py-2 rounded-xl border border-gray-255 dark:border-gray-800 bg-white dark:bg-on-surface text-xs font-bold text-gray-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-800 transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
-              >
-                Next
-              </button>
-            </div>
+            <ReactPaginate
+              breakLabel="..."
+              nextLabel="Next"
+              previousLabel="Previous"
+              onPageChange={(data) => handlePageChange(data.selected + 1)}
+              pageRangeDisplayed={3}
+              marginPagesDisplayed={2}
+              pageCount={totalPages}
+              forcePage={currentPage - 1}
+              containerClassName="flex justify-center items-center gap-1.5 pt-4"
+              pageClassName="list-none"
+              pageLinkClassName="w-9 h-9 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center border border-gray-255 dark:border-gray-800 bg-white dark:bg-on-surface text-gray-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-800 select-none"
+              activeClassName="active-page"
+              activeLinkClassName="!bg-primary !text-white !border-primary shadow-md shadow-primary/20"
+              previousClassName="list-none"
+              previousLinkClassName="px-4 py-2 rounded-xl border border-gray-255 dark:border-gray-800 bg-white dark:bg-on-surface text-xs font-bold text-gray-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-800 transition-colors select-none"
+              nextClassName="list-none"
+              nextLinkClassName="px-4 py-2 rounded-xl border border-gray-255 dark:border-gray-800 bg-white dark:bg-on-surface text-xs font-bold text-gray-700 dark:text-gray-200 hover:bg-slate-50 dark:hover:bg-gray-800 transition-colors select-none"
+              disabledClassName="opacity-40 pointer-events-none cursor-not-allowed"
+              breakClassName="list-none"
+              breakLinkClassName="w-9 h-9 rounded-xl text-xs font-bold flex items-center justify-center text-gray-400 select-none"
+            />
           )}
 
         </div>
