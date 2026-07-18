@@ -1,0 +1,73 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Outfit', sans-serif;
+  --color-primary: #4f46e5;
+  --color-on-surface: #23262f;
+  --color-secondary: #777e90;
+  --color-secondary2: #b1b5c3;
+  --color-surface: #f7f7f7;
+  --color-surface-main: #ffffff;
+  --color-interactive: #6366f1;
+  --color-critical: #d33535;
+  --color-warning: #fabe3c;
+  --color-success: #58bd7d;
+  --color-highlight: #4338ca;
+  --color-decorative: #383fd9;
+
+  --animate-float: float 4s ease-in-out infinite;
+  --animate-pulse-slow: pulse-slow 3s ease-in-out infinite;
+  --animate-wobble: wobble 4s ease-in-out infinite;
+  --animate-spin-slow: spin-slow 15s linear infinite;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+  @keyframes pulse-slow {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+  }
+  @keyframes wobble {
+    0%, 100% { transform: rotate(0); }
+    5% { transform: rotate(8deg); }
+    10% { transform: rotate(-8deg); }
+    15% { transform: rotate(5deg); }
+    20% { transform: rotate(-5deg); }
+    25% { transform: rotate(0); }
+  }
+  @keyframes spin-slow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #23262f;
+  font-family: 'Outfit', sans-serif;
+}
+
+:root.dark {
+  --background: #141416;
+  --foreground: #ffffff;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: 'Outfit', sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Custom Spacing Helpers */
+.spacing-xs { gap: 4px; }
+.spacing-sm { gap: 8px; }
+.spacing-md { gap: 16px; }
+.spacing-lg { gap: 24px; }
+.spacing-xl { gap: 32px; }
+.spacing-xxl { gap: 48px; }
+.spacing-huge { gap: 64px; }
