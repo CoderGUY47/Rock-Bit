@@ -1,9 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { signIn } from "@/lib/auth-client";
 
 export default function LoginPage() {
@@ -27,9 +27,7 @@ export default function LoginPage() {
       if (response?.error) {
         setError(response.error.message || "Invalid credentials. Please use user@gmail.com / 123456.");
       } else {
-        // Redirect to homepage after successful simulated login
         router.push("/");
-        router.refresh();
       }
     } catch (err: any) {
       setError(err?.message || "An unexpected error occurred.");
@@ -121,13 +119,12 @@ export default function LoginPage() {
               {loading ? "Logging in..." : "Login"}
             </button>
 
-            {/* Demo Login Button (Auto-fill required) */}
+            {/* Demo Login Button */}
             <button
               type="button"
               onClick={() => {
                 setEmail("user@gmail.com");
                 setPassword("123456");
-                // Immediately submit or allow user to see it prefilled and click login
               }}
               className="w-full py-3 rounded-full font-bold text-xs bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200 border-none outline-none cursor-pointer"
             >
@@ -148,14 +145,12 @@ export default function LoginPage() {
           type="button"
           onClick={async () => {
             setLoading(true);
-            // Simulate Google Login
             localStorage.setItem("auth_logged_in", "true");
             setTimeout(() => {
               router.push("/");
-              router.refresh();
             }, 800);
           }}
-          className="w-full py-3 rounded-full border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center justify-center gap-2 text-xs font-bold text-gray-700 dark:text-gray-200 transition-colors duration-200 cursor-pointer"
+          className="w-full py-3 rounded-full border border-gray-200 dark:border-gray-800 hover:bg-gray-55 dark:hover:bg-gray-800 flex items-center justify-center gap-2 text-xs font-bold text-gray-700 dark:text-gray-200 transition-colors duration-200 cursor-pointer"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24">
             <path

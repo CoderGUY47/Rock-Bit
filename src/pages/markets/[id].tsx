@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { getItemById, getItems, CryptoItem } from '@/utils/items';
 import { FiChevronLeft, FiStar, FiTrendingUp, FiTrendingDown, FiMessageSquare } from 'react-icons/fi';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -16,9 +16,8 @@ interface Review {
 }
 
 export default function ItemDetailsPage() {
-  const params = useParams();
   const router = useRouter();
-  const id = params?.id as string;
+  const { id } = router.query;
 
   const [item, setItem] = useState<CryptoItem | null>(null);
   const [loading, setLoading] = useState(true);
@@ -50,7 +49,7 @@ export default function ItemDetailsPage() {
   ] : [];
 
   useEffect(() => {
-    if (!id) return;
+    if (!id || typeof id !== 'string') return;
     const foundItem = getItemById(id);
     if (!foundItem) {
       // If not found, redirect to markets page
@@ -94,7 +93,7 @@ export default function ItemDetailsPage() {
     .filter((i) => i.id !== item.id && (i.category === item.category || i.category === 'L1'))
     .slice(0, 3);
 
-  // Gallery images (simulated by modifying colors/angles of the same Unsplash link or showing generic high quality placeholders)
+  // Gallery images
   const gallery = [
     item.image,
     "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?q=80&w=600&auto=format&fit=crop",
@@ -294,11 +293,11 @@ export default function ItemDetailsPage() {
               <div>
                 <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Technical Details</h3>
                 <div className="space-y-4">
-                  <div className="flex justify-between py-2 border-b border-gray-50 dark:border-gray-800">
+                  <div className="flex justify-between py-2 border-b border-gray-55 dark:border-gray-800">
                     <span className="text-xs font-semibold text-gray-500">Asset Symbol</span>
                     <span className="text-xs font-bold text-gray-900 dark:text-white uppercase">{item.id}</span>
                   </div>
-                  <div className="flex justify-between py-2 border-b border-gray-50 dark:border-gray-800">
+                  <div className="flex justify-between py-2 border-b border-gray-55 dark:border-gray-800">
                     <span className="text-xs font-semibold text-gray-500">Consensus Mechanism</span>
                     <span className="text-xs font-bold text-gray-900 dark:text-white">{item.category === 'L1' ? 'Proof of Stake' : 'Smart Contract Protocol'}</span>
                   </div>
@@ -312,11 +311,11 @@ export default function ItemDetailsPage() {
               <div>
                 <h3 className="text-xs font-black text-gray-400 uppercase tracking-widest mb-4">Market Metrics</h3>
                 <div className="space-y-4">
-                  <div className="flex justify-between py-2 border-b border-gray-50 dark:border-gray-800">
+                  <div className="flex justify-between py-2 border-b border-gray-55 dark:border-gray-800">
                     <span className="text-xs font-semibold text-gray-500">Volume (24h)</span>
                     <span className="text-xs font-bold text-gray-900 dark:text-white">{item.volume24h}</span>
                   </div>
-                  <div className="flex justify-between py-2 border-b border-gray-50 dark:border-gray-800">
+                  <div className="flex justify-between py-2 border-b border-gray-55 dark:border-gray-800">
                     <span className="text-xs font-semibold text-gray-500">Popularity Rating</span>
                     <span className="text-xs font-bold text-gray-900 dark:text-white">{item.rating}/5.0</span>
                   </div>
@@ -331,7 +330,6 @@ export default function ItemDetailsPage() {
 
           {activeTab === 'reviews' && (
             <div className="space-y-8">
-              {/* Review list */}
               <div className="space-y-4">
                 <h3 className="text-base font-bold text-gray-900 dark:text-white flex items-center gap-2">
                   <FiMessageSquare className="w-5 h-5 text-primary" />
@@ -358,7 +356,6 @@ export default function ItemDetailsPage() {
                 ))}
               </div>
 
-              {/* Add review form */}
               <form onSubmit={handleAddReview} className="border-t border-gray-100 dark:border-gray-800 pt-6">
                 <h4 className="text-sm font-bold text-gray-900 dark:text-white mb-4">Write a Review</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { useSession } from '@/lib/auth-client';
 import { getItems, deleteCustomItem, CryptoItem } from '@/utils/items';
 import Link from 'next/link';
@@ -101,31 +101,31 @@ export default function ManageItemsPage() {
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 px-2.5 py-0.5 rounded-full text-[10px] font-bold">
+                        <span className="bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-full">
                           {item.category}
                         </span>
                       </td>
-                      <td className="px-6 py-4 font-bold text-gray-900 dark:text-white">
+                      <td className="px-6 py-4 font-black text-gray-900 dark:text-white">
                         ${item.price.toFixed(2)}
                       </td>
-                      <td className="px-6 py-4 font-bold text-yellow-500">
-                        {item.rating}/5.0
+                      <td className="px-6 py-4 text-yellow-500 font-bold">
+                        ★ {item.rating.toFixed(1)}
                       </td>
-                      <td className="px-6 py-4 text-right space-x-2">
-                        <Link
-                          href={`/markets/${item.id}`}
-                          className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-primary hover:text-white dark:hover:bg-primary dark:hover:text-white transition-all cursor-pointer"
-                          title="View Details"
-                        >
-                          <FiEye className="w-4 h-4" />
-                        </Link>
-                        <button
-                          onClick={() => handleDelete(item.id)}
-                          className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-red-50 dark:bg-red-950/20 text-red-500 hover:bg-red-500 hover:text-white dark:hover:bg-red-500 dark:hover:text-white transition-all cursor-pointer"
-                          title="Delete Asset"
-                        >
-                          <FiTrash2 className="w-4 h-4" />
-                        </button>
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex justify-end items-center gap-2">
+                          <Link
+                            href={`/markets/${item.id}`}
+                            className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-750 text-gray-600 dark:text-gray-300 transition-colors cursor-pointer"
+                          >
+                            <FiEye className="w-4.5 h-4.5" />
+                          </Link>
+                          <button
+                            onClick={() => handleDelete(item.id)}
+                            className="p-2 rounded-lg bg-red-50 dark:bg-red-950/20 hover:bg-red-100 dark:hover:bg-red-950/40 text-red-500 transition-colors cursor-pointer border-none outline-none"
+                          >
+                            <FiTrash2 className="w-4.5 h-4.5" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}

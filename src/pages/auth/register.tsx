@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { signUp } from "@/lib/auth-client";
 
 export default function RegisterPage() {
@@ -29,9 +29,7 @@ export default function RegisterPage() {
       if (response?.error) {
         setError(response.error.message || "Something went wrong during register.");
       } else {
-        // Redirect to homepage after successful simulated signup
         router.push("/");
-        router.refresh();
       }
     } catch (err: any) {
       setError(err?.message || "An unexpected error occurred.");
@@ -148,10 +146,9 @@ export default function RegisterPage() {
             localStorage.setItem("auth_logged_in", "true");
             setTimeout(() => {
               router.push("/");
-              router.refresh();
             }, 800);
           }}
-          className="w-full py-3.5 rounded-full border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center justify-center gap-2 text-xs font-bold text-gray-700 dark:text-gray-200 transition-colors duration-200 cursor-pointer"
+          className="w-full py-3.5 rounded-full border border-gray-200 dark:border-gray-800 hover:bg-gray-55 dark:hover:bg-gray-800 flex items-center justify-center gap-2 text-xs font-bold text-gray-700 dark:text-gray-200 transition-colors duration-200 cursor-pointer"
         >
           <svg className="w-4 h-4" viewBox="0 0 24 24">
             <path
