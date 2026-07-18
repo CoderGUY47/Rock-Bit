@@ -9,7 +9,6 @@ const SYMBOL_MAP: Record<string, string> = {
   'ARBUSDT': 'arbitrum',
   'OPUSDT': 'optimism',
   'LINKUSDT': 'chainlink',
-  'USDTUSDT': 'tether', // Stablecoin representation
   'BNBUSDT': 'bnb',
   'XRPUSDT': 'xrp',
   'ADAUSDT': 'cardano',
@@ -17,7 +16,7 @@ const SYMBOL_MAP: Record<string, string> = {
   'DOTUSDT': 'polkadot',
   'DOGEUSDT': 'dogecoin',
   'SHIBUSDT': 'shiba-inu',
-  'MATICUSDT': 'polygon',
+  'POLUSDT': 'polygon', // POL is the Polygon ticker on Binance now
   'LTCUSDT': 'litecoin',
   'NEARUSDT': 'near',
   'ATOMUSDT': 'cosmos'
