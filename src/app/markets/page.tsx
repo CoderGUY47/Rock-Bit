@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { getItems, CryptoItem } from '@/utils/items';
 import { FiSearch, FiSliders, FiTrendingUp, FiTrendingDown, FiStar } from 'react-icons/fi';
 import { AIRecommendations } from '@/components/AIRecommendations';
+import { LearnEarn } from '@/pages/LearnEarn';
 
 const CARDS_PER_PAGE = 8;
 
@@ -345,6 +346,7 @@ export default function MarketsPage() {
         )}
 
       </div>
+      <LearnEarn limitTo3 />
     </div>
   );
 }
