@@ -6,7 +6,7 @@ import Image from "next/image";
 import { getItems, CryptoItem } from "@/utils/items";
 import { FiSearch, FiStar, FiTrendingUp, FiTrendingDown } from "react-icons/fi";
 import { FaStar } from "react-icons/fa";
-import { AIRecommendations } from "@/components/aiRecommendations";
+import { AIRecommendations } from "@/components/AIRecommendations";
 import { LearnEarn } from "@/components/home";
 import { Button } from "@/components/button";
 import ReactPaginate from "react-paginate";
