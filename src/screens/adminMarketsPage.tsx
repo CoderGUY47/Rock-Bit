@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * AdminMarketsPage Component
+ * Admin terminal interface presenting real-time candlestick charts and spot market lists.
+ */
 import React, { useState, useRef, useEffect } from "react";
 import { TradingChart } from "@/components/tradingChart";
 import { Candle, generateInitialCandles } from "@/scheme/exchange";
