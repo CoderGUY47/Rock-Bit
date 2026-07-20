@@ -33,3 +33,6 @@ tsconfig.tsbuildinfo
 ai_studio_code.html
 scratch/
 
+
+.vercel
+.env*
