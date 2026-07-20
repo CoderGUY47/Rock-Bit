@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * DashboardSidebar Component
+ * Admin navigation sidebar featuring 3D logo, collapsible dropdowns, and route highlighting.
+ */
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
