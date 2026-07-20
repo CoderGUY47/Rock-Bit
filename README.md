@@ -148,6 +148,8 @@ BETTER_AUTH_URL=http://localhost:3000
 npm run dev
 ```
 
+> **Note:** Access the admin dashboard via `http://localhost:3000/admin-home`.
+
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ---
