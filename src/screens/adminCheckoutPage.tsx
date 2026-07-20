@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * AdminCheckoutPage Component
+ * Provides searchable order logs, checkout fee tracking, and status filtering.
+ */
 import React, { useState } from "react";
 import {
   FiShoppingCart, FiDollarSign, FiCheckCircle, FiClock,
