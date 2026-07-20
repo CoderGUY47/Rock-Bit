@@ -1,5 +1,9 @@
 import { NextResponse } from 'next/server';
 
+/**
+ * Live Crypto Prices API Proxy
+ * Fetches real-time market data from Binance public API endpoints and maps them to CoinGecko IDs.
+ */
 const SYMBOL_MAP: Record<string, string> = {
   'BTCUSDT': 'bitcoin',
   'ETHUSDT': 'ethereum',
