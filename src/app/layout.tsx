@@ -8,6 +8,11 @@ import { AppToastContainer } from '@/components/toastProvider';
 export const metadata: Metadata = {
   title: 'Rock-Bit Crypto Exchange',
   description: 'Next-generation crypto portfolio tracking and exchange ecosystem.',
+  icons: {
+    icon: '/assets/images/3d-logo.png',
+    shortcut: '/assets/images/3d-logo.png',
+    apple: '/assets/images/3d-logo.png',
+  },
 };
 
 export default function RootLayout({
