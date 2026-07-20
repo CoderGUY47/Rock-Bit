@@ -25,7 +25,7 @@ export default function NotFound() {
         <div className="pt-2 flex flex-col gap-3">
           <Link
             href="/"
-            className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-md text-sm shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-md text-sm shadow-sm active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <FiHome className="w-4 h-4" /> Return to Homepage
           </Link>
