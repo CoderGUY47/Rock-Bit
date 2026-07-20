@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * AvatarPickerModal Component
+ * Interactive SVG avatar selection modal supporting 15 preset avatars and custom URL inputs.
+ */
 import React, { useState } from "react";
 import { useProfile, DEFAULT_AVATARS } from "@/context/profileContext";
 import { FiX, FiLink, FiCheck, FiImage } from "react-icons/fi";
