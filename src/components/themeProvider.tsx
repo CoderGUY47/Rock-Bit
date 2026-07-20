@@ -1,5 +1,9 @@
 "use client"
 
+/**
+ * ThemeProvider Component
+ * Configures dark/light theme switching with next-themes and wraps QueryClientProvider for React Query.
+ */
 import * as React from "react"
 import { ThemeProvider as NextThemesProvider, useTheme as useNextTheme } from "next-themes"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
