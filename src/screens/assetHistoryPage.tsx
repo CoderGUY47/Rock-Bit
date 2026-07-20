@@ -121,8 +121,13 @@ export default function AssetHistoryPage() {
                       </span>
                     </td>
                   </tr>
-                );
-              })}
+              {filtered.length === 0 && (
+                <tr>
+                  <td colSpan={8} className="px-5 py-8 text-center text-xs font-bold text-gray-400">
+                    No transactions match your search filter.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
