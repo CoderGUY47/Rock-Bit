@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * AppToastContainer Component & Helpers
+ * Custom stylized toast notifications for application alerts and action feedback.
+ */
 import React from "react";
 import { ToastContainer, toast, ToastOptions } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
