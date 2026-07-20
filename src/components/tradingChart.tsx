@@ -1,6 +1,10 @@
 import React from "react";
 import { Candle } from "@/scheme/exchange";
 
+/**
+ * TradingChart Component
+ * High-performance SVG candlestick & volume renderer with dynamic scale calculations.
+ */
 interface TradingChartProps {
   candles: Candle[];
   selectedTimeframe: string;
