@@ -1,5 +1,10 @@
 "use client";
 
+/**
+ * AdminDashboardPage Component
+ * Provides real-time executive platform metrics, interactive Recharts analytics,
+ * recent trade audit logs, and security alert monitors.
+ */
 import React, { useState } from "react";
 import {
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid,
