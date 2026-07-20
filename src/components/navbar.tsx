@@ -66,7 +66,7 @@ export const Navbar = () => {
               <span>Rock-Bit</span>
             </Link>
 
-            {/* Desktop Navigation Links */}
+            {/* Desktop Navigation Links with active path indicator */}
             <div className="hidden xl:flex items-center h-full">
               {/* Standard text links */}
               <div className="flex items-center h-full">
