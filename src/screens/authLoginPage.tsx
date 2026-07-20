@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Auth LoginPage Component
+ * User login interface supporting Email/Phone authentication and default credentials auto-redirect.
+ */
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
