@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * DashboardShell Component
+ * Layout container that selectively wraps `/admin-*` paths with Admin Sidebar & Header.
+ */
 import React from "react";
 import { usePathname } from "next/navigation";
 import { DashboardSidebar } from "@/components/dashboardSidebar";
