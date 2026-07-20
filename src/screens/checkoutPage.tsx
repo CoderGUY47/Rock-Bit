@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * CheckoutPage Component
+ * 3-step payment and sale checkout flow with dynamic rate calculation and currency selection.
+ */
 import React, { useState } from "react";
 import Link from "next/link";
 import { FiCheck, FiCopy, FiChevronRight } from "react-icons/fi";
