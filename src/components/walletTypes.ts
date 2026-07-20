@@ -22,6 +22,7 @@ export type CoinInfo = {
   chartColor: string;
   isUp: boolean;
   unit: string;
+  lastUpdated?: string;
 };
 
 export const coinData: Record<string, CoinInfo> = {
