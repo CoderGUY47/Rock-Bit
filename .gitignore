@@ -29,3 +29,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+tsconfig.tsbuildinfo
+ai_studio_code.html
+scratch/
+

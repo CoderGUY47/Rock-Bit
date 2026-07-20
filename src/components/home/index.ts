@@ -1,0 +1,9 @@
+export { Banner } from './banner';
+export { MarketTicker } from './marketTicker';
+export { WhyChooseUs } from './whyChooseUs';
+export { EasyTrading } from './easyTrading';
+export { Statistics } from './statistics';
+export { LearnEarn } from './learnEarn';
+export { Testimonials } from './testimonials';
+export { Community } from './community';
+export { ThreeGlobe } from './threeGlobe';
